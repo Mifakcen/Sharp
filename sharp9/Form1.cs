@@ -36,6 +36,7 @@ namespace sharp9
             for (int i = 0; i < amountel; i++)
                 comboBox1.Items.Add((Numbers)i);
         }
+
         public enum Numbers
         {
 
@@ -44,27 +45,7 @@ namespace sharp9
         {
             Неопределенный, Белый, Красный, Фиолетовый, Серый, Зелёный, Синий, Оранжевый, Желтый, Голубой
 
-        }
-
-       
-        public class Mashin 
-        {
-            public string Num;
-            public string Model;
-            public string Color;
-            public string FIO;
-            public Mashin(string num, string model, string color, string fio)
-            {
-                this.Num = num;
-                this.Model = model;
-                this.Color = color;
-                this.FIO = fio;
-            }
-
-           
-        }
-        static List<Mashin> list = new List<Mashin>();
-
+        }                       
         public class Avto
         {
             string Num;
@@ -97,9 +78,26 @@ namespace sharp9
             }
         }
 
+        public class Mashin
+        {
+            public string Num;
+            public string Model;
+            public string Color;
+            public string FIO;
+            public Mashin(string num, string model, string color, string fio)
+            {
+                this.Num = num;
+                this.Model = model;
+                this.Color = color;
+                this.FIO = fio;
+            }
+
+
+        }
+        static List<Mashin> list = new List<Mashin>();
         private Mashin поиск(String str)
         {
-            foreach(Mashin mashin in list)
+            foreach (Mashin mashin in list)
             {
                 if (mashin.Num == str)
                 {
@@ -108,7 +106,6 @@ namespace sharp9
             }
             return null;
         }
-
 
         private void ComboBox1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
@@ -127,13 +124,14 @@ namespace sharp9
                 else
                 {
                     MessageBox.Show("Элемент не найден в базе");
+                    string str = comboBox1.Text;
                     button3_Click(sender, e);
+                    textBox1.Text = str;
                 }
                 groupBox1.Visible = true;
-                textBox1.Text = comboBox1.Text;
             }
         }
-
+        
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox3.Text = comboBox2.Text;
@@ -152,14 +150,22 @@ namespace sharp9
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MD[amountel].Update(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
-       
-            amountel++;
+            Mashin mashin = поиск(textBox1.Text);
+            if (mashin == null)
+            {
+                MD[amountel].Update(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
 
-            comboBox1.Items.Add(textBox1.Text);
+                amountel++;
+                comboBox1.Items.Add(textBox1.Text);
+            }
+            else
+            {
+                mashin.Num = textBox1.Text;
+                mashin.Model = textBox2.Text;
 
-         //   MD[amountel];
-         
+                mashin.Color = textBox3.Text;
+                mashin.FIO = textBox4.Text;
+            }
             button3_Click(sender, e);
         }
 
@@ -168,5 +174,15 @@ namespace sharp9
             textBox1.Text = comboBox1.Text;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Mashin mashin = поиск(textBox1.Text);
+            if (mashin != null)
+            {
+                list.Remove(mashin);
+                comboBox1.Items.Remove(textBox1.Text);
+                button3_Click(sender, e);
+            }
+        }
     }
 }
