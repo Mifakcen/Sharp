@@ -45,6 +45,26 @@ namespace sharp9
             Неопределенный, Белый, Красный, Фиолетовый, Серый, Зелёный, Синий, Оранжевый, Желтый, Голубой
 
         }
+
+       
+        public class Mashin 
+        {
+            public string Num;
+            public string Model;
+            public string Color;
+            public string FIO;
+            public Mashin(string num, string model, string color, string fio)
+            {
+                this.Num = num;
+                this.Model = model;
+                this.Color = color;
+                this.FIO = fio;
+            }
+
+           
+        }
+        static List<Mashin> list = new List<Mashin>();
+
         public class Avto
         {
             string Num;
@@ -66,6 +86,7 @@ namespace sharp9
                 Model = m;
                 Color = c;
                 FIO = fio;
+                list.Add(new Mashin(g, m, c, fio));
             }
             public void transmit(Avto a, int amountel)
             {
@@ -75,11 +96,39 @@ namespace sharp9
                 }
             }
         }
+
+        private Mashin поиск(String str)
+        {
+            foreach(Mashin mashin in list)
+            {
+                if (mashin.Num == str)
+                {
+                    return mashin;
+                }
+            }
+            return null;
+        }
+
+
         private void ComboBox1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                MessageBox.Show("Kek");
+                Mashin mashin = поиск(comboBox1.Text);
+                if (mashin != null)
+                {
+                    groupBox1.Visible = true;
+                    textBox1.Text = mashin.Num;
+                    textBox2.Text = mashin.Model;
+                    textBox3.Text = mashin.Color;
+                    textBox4.Text = mashin.FIO;
+
+                }
+                else
+                {
+                    MessageBox.Show("Элемент не найден в базе");
+                    button3_Click(sender, e);
+                }
                 groupBox1.Visible = true;
                 textBox1.Text = comboBox1.Text;
             }
@@ -106,6 +155,8 @@ namespace sharp9
             MD[amountel].Update(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
        
             amountel++;
+
+            comboBox1.Items.Add(textBox1.Text);
 
          //   MD[amountel];
          
