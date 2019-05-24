@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace sharp9
 {
     public partial class Form1 : Form
     {
+        BinaryFormatter formatter = new BinaryFormatter();
         public Form1()
         {
             InitializeComponent();
@@ -19,7 +22,7 @@ namespace sharp9
 
         Avto[] MD = new Avto[1000];
         int amountel;
-
+        static List<Mashin> list = new List<Mashin>();
         private void Form1_Load(object sender, EventArgs e)
         {
             groupBox1.Visible = false;
@@ -35,6 +38,18 @@ namespace sharp9
             }
             for (int i = 0; i < amountel; i++)
                 comboBox1.Items.Add((Numbers)i);
+
+            using (FileStream fs = new FileStream("C:\\Users\\Mifa\\Desktop\\people.dat", FileMode.OpenOrCreate))
+            {
+                List<Mashin> deserilizeMashin = (List<Mashin>)formatter.Deserialize(fs);
+
+                foreach(Mashin mashin in deserilizeMashin)
+                {
+                    list.Add(mashin);
+                    comboBox1.Items.Add(mashin.Num);
+                }
+            };
+
         }
 
         public enum Numbers
@@ -77,7 +92,7 @@ namespace sharp9
                 }
             }
         }
-
+        [Serializable]
         public class Mashin
         {
             public string Num;
@@ -94,7 +109,8 @@ namespace sharp9
 
 
         }
-        static List<Mashin> list = new List<Mashin>();
+      //  [Serializable]
+       
         private Mashin поиск(String str)
         {
             foreach (Mashin mashin in list)
@@ -157,6 +173,13 @@ namespace sharp9
 
                 amountel++;
                 comboBox1.Items.Add(textBox1.Text);
+
+               
+
+                using (FileStream fs = new FileStream("C:\\Users\\Mifa\\Desktop\\people.dat", FileMode.OpenOrCreate))
+                {
+                    formatter.Serialize(fs, list);
+                };
             }
             else
             {
@@ -184,5 +207,6 @@ namespace sharp9
                 button3_Click(sender, e);
             }
         }
+
     }
 }
